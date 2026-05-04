@@ -1,0 +1,57 @@
+name: Render Notebook → GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "notebooks/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deps
+        run: pip install nbconvert jupyter pandas numpy matplotlib seaborn plotly scikit-learn
+
+      - name: Convert notebook to HTML
+        run: |
+          jupyter nbconvert \
+            --to html \
+            --no-input \
+            --output-dir docs/ \
+            notebooks/olist_analysis.ipynb
+          cp docs/olist_analysis.html docs/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

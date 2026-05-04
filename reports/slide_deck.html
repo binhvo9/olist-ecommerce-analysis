@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Olist E-Commerce Analysis — Stakeholder Deck</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/theme/white.css"/>
+<style>
+  :root { --brand: #2563EB; --dark: #1E293B; }
+  .reveal { font-family: 'Segoe UI', system-ui, sans-serif; }
+  .reveal h1, .reveal h2 { color: var(--brand); }
+  .reveal h3 { color: var(--dark); }
+  .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+  .kpi-card { background: #F1F5F9; border-left: 4px solid var(--brand); padding: 1rem; border-radius: 6px; }
+  .kpi-number { font-size: 2rem; font-weight: 700; color: var(--brand); }
+  .kpi-label { font-size: 0.85rem; color: #64748B; margin-top: 0.25rem; }
+  .insight-box { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px;
+                 padding: 1.2rem; margin: 0.8rem 0; font-size: 0.95rem; }
+  .red { color: #DC2626; font-weight: 600; }
+  .green { color: #16A34A; font-weight: 600; }
+  .tag { display: inline-block; background: var(--brand); color: white;
+         padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; margin: 0.2rem; }
+  table.deck { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  table.deck th { background: var(--brand); color: white; padding: 0.5rem; }
+  table.deck td { padding: 0.5rem; border-bottom: 1px solid #E2E8F0; }
+  table.deck tr:nth-child(even) td { background: #F8FAFC; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+  .segment-card { background: #F8FAFC; border-radius: 8px; padding: 0.8rem;
+                  border-top: 3px solid var(--brand); font-size: 0.82rem; }
+  .segment-card h4 { margin: 0 0 0.4rem; color: var(--dark); }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ── Slide 1: Title ──────────────────────────────────────────────────── -->
+<section>
+  <h1 style="font-size:2.2rem">Olist Brazilian E-Commerce</h1>
+  <h2 style="font-size:1.4rem; color:#64748B">End-to-End Data Analysis · 2016–2018</h2>
+  <hr style="border-color:#BFDBFE; margin:1.5rem auto; width:60%"/>
+  <p style="color:#64748B; font-size:0.9rem">
+    100,000 orders &nbsp;·&nbsp; 8 relational tables &nbsp;·&nbsp; 3 analytical angles
+  </p>
+  <div style="margin-top:1.5rem">
+    <span class="tag">Delivery Performance</span>
+    <span class="tag">Customer Segmentation</span>
+    <span class="tag">Review Prediction</span>
+  </div>
+</section>
+
+<!-- ── Slide 2: The hook ───────────────────────────────────────────────── -->
+<section>
+  <h2>The Problem</h2>
+  <div class="insight-box" style="font-size:1.1rem; text-align:center; padding:2rem">
+    <strong style="font-size:1.5rem; color:var(--brand)">
+      Only ~60% of orders arrive on time.
+    </strong><br/><br/>
+    In the North and Northeast regions,<br/>
+    average delivery runs <span class="red">10+ days late</span>.<br/><br/>
+    And late delivery is the <strong>#1 predictor of a 1-star review</strong>.
+  </div>
+</section>
+
+<!-- ── Slide 3: Dataset ────────────────────────────────────────────────── -->
+<section>
+  <h2>The Dataset</h2>
+  <div class="two-col">
+    <div>
+      <h3>8 Relational Tables</h3>
+      <table class="deck">
+        <tr><th>Table</th><th>Rows</th></tr>
+        <tr><td>orders</td><td>~99k</td></tr>
+        <tr><td>order_items</td><td>~113k</td></tr>
+        <tr><td>customers</td><td>~99k</td></tr>
+        <tr><td>payments</td><td>~103k</td></tr>
+        <tr><td>reviews</td><td>~100k</td></tr>
+        <tr><td>products</td><td>~33k</td></tr>
+        <tr><td>sellers</td><td>~3k</td></tr>
+        <tr><td>geolocation</td><td>~1M</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Real-World Messiness</h3>
+      <ul style="font-size:0.85rem; line-height:1.9">
+        <li><code>customer_id</code> ≠ unique human</li>
+        <li>Delivery timestamps null for non-delivered</li>
+        <li>Multiple payment rows per order</li>
+        <li>Reviews timestamped before delivery</li>
+        <li>Portuguese category names</li>
+        <li>Product dimensions often zero</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── Slide 4: Delivery overview ─────────────────────────────────────── -->
+<section>
+  <h2>Angle 1 — Delivery Performance</h2>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-number">~60%</div>
+      <div class="kpi-label">On-time delivery rate</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-number red">10+ days</div>
+      <div class="kpi-label">Average delay — North/Northeast</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-number green">−3 days</div>
+      <div class="kpi-label">Average — São Paulo (early)</div>
+    </div>
+  </div>
+  <div class="insight-box" style="margin-top:1rem">
+    <strong>Key finding:</strong> Delivery delay is almost entirely a geography problem.
+    SP sellers shipping to SP customers are early. Everything else degrades with distance.
+  </div>
+</section>
+
+<!-- ── Slide 5: Forgiveness window ────────────────────────────────────── -->
+<section>
+  <h2>The Forgiveness Window</h2>
+  <div class="insight-box" style="font-size:1rem">
+    Reviews stay stable for delays up to <strong>~7 days</strong>.<br/>
+    Beyond that, mean review score drops sharply from 4.2 → 2.8.
+  </div>
+  <br/>
+  <div class="two-col" style="font-size:0.88rem">
+    <div>
+      <h3>Before the window (≤7 days late)</h3>
+      <ul>
+        <li>Mean review: 4.1–4.3</li>
+        <li>Customers still forgiving</li>
+        <li>Proactive communication helps</li>
+      </ul>
+    </div>
+    <div>
+      <h3>After the window (&gt;7 days late)</h3>
+      <ul>
+        <li>Mean review: 2.8–3.2</li>
+        <li>Score recovery very unlikely</li>
+        <li>Prevention is the only strategy</li>
+      </ul>
+    </div>
+  </div>
+  <p style="font-size:0.8rem; color:#64748B; margin-top:1rem">
+    → Operational threshold: flag any order predicted &gt;7 days late for immediate seller alert
+  </p>
+</section>
+
+<!-- ── Slide 6: RFM segmentation ──────────────────────────────────────── -->
+<section>
+  <h2>Angle 2 — Customer Segments</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-top:0.5rem">
+    <div class="segment-card" style="border-color:#2563EB">
+      <h4>🏆 Champions</h4>
+      <p>High spend · recent · repeat buyers<br/>
+      <strong>Action:</strong> Loyalty rewards, early access</p>
+    </div>
+    <div class="segment-card" style="border-color:#16A34A">
+      <h4>💚 Loyal</h4>
+      <p>Consistent frequency · moderate spend<br/>
+      <strong>Action:</strong> Cross-sell, referral programme</p>
+    </div>
+    <div class="segment-card" style="border-color:#F59E0B">
+      <h4>⚠️ At-Risk</h4>
+      <p>Good history · lapsing recently<br/>
+      <strong>Action:</strong> Win-back campaign, personalised offer</p>
+    </div>
+    <div class="segment-card" style="border-color:#DC2626">
+      <h4>💔 Lost</h4>
+      <p>Long inactive · low engagement<br/>
+      <strong>Action:</strong> Low-cost reactivation or accept churn</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Slide 7: Review prediction setup ──────────────────────────────── -->
+<section>
+  <h2>Angle 3 — Review Prediction</h2>
+  <div class="two-col">
+    <div>
+      <h3>Target</h3>
+      <p>Binary: <span class="red">Bad review (1–2)</span> vs <span class="green">Good (4–5)</span><br/>
+      Neutral score (3) excluded as ambiguous</p>
+      <h3 style="margin-top:1rem">Features (10 numeric + 4 categorical)</h3>
+      <ul style="font-size:0.8rem; line-height:1.8">
+        <li>delivery_delay, days_to_deliver</li>
+        <li>total_price, freight_ratio</li>
+        <li>payment_installments, n_items</li>
+        <li>product_category, customer_state</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Models</h3>
+      <table class="deck">
+        <tr><th>Model</th><th>ROC-AUC</th></tr>
+        <tr><td>Logistic Regression</td><td>~0.68</td></tr>
+        <tr><td><strong>Random Forest</strong></td><td><strong>~0.78</strong></td></tr>
+      </table>
+      <div class="insight-box" style="margin-top:1rem; font-size:0.85rem">
+        +10 AUC points over baseline.<br/>
+        Deployed in Streamlit dashboard as live predictor.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Slide 8: SHAP ───────────────────────────────────────────────────── -->
+<section>
+  <h2>What Drives a Bad Review?</h2>
+  <h3>SHAP Feature Importance (Random Forest)</h3>
+  <div class="insight-box">
+    <strong>delivery_delay</strong> is the dominant predictor — by a large margin.<br/>
+    <code>freight_ratio</code> and <code>product_category</code> matter too, but secondary.
+  </div>
+  <br/>
+  <table class="deck">
+    <tr><th>Rank</th><th>Feature</th><th>Direction</th></tr>
+    <tr><td>1</td><td>delivery_delay</td><td>↑ delay → ↑ bad review probability</td></tr>
+    <tr><td>2</td><td>freight_ratio</td><td>↑ freight cost share → ↑ bad review</td></tr>
+    <tr><td>3</td><td>product_category</td><td>Some categories consistently lower-rated</td></tr>
+    <tr><td>4</td><td>days_to_approve</td><td>Slow approval correlates with problems</td></tr>
+    <tr><td>5</td><td>customer_state</td><td>Regional effect (NE worse than SE)</td></tr>
+  </table>
+</section>
+
+<!-- ── Slide 9: Recommendations ───────────────────────────────────────── -->
+<section>
+  <h2>Recommendations</h2>
+  <table class="deck">
+    <tr><th>Priority</th><th>Action</th><th>Impact</th></tr>
+    <tr>
+      <td><span style="color:#DC2626">● HIGH</span></td>
+      <td>Regional fulfilment in North/Northeast</td>
+      <td>On-time rate 60% → 75%+</td>
+    </tr>
+    <tr>
+      <td><span style="color:#DC2626">● HIGH</span></td>
+      <td>Proactive delay alerts when &gt;5 days predicted</td>
+      <td>Soften impact before threshold</td>
+    </tr>
+    <tr>
+      <td><span style="color:#F59E0B">● MED</span></td>
+      <td>At-Risk segment win-back campaign</td>
+      <td>Recover 10–20% before full churn</td>
+    </tr>
+    <tr>
+      <td><span style="color:#F59E0B">● MED</span></td>
+      <td>Review-risk score in seller dashboard</td>
+      <td>Earlier intervention on high-risk orders</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ── Slide 10: Close ─────────────────────────────────────────────────── -->
+<section>
+  <h2>Summary</h2>
+  <div class="kpi-grid" style="grid-template-columns: 1fr 1fr 1fr; margin:1rem 0">
+    <div class="kpi-card">
+      <div class="kpi-number">1</div>
+      <div class="kpi-label">Root cause of bad reviews: delivery delay</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-number">4</div>
+      <div class="kpi-label">Customer segments with distinct playbooks</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-number">0.78</div>
+      <div class="kpi-label">ROC-AUC — actionable prediction model</div>
+    </div>
+  </div>
+  <div class="insight-box" style="text-align:center; font-size:1rem; margin-top:1rem">
+    <strong>The single highest-leverage investment:</strong><br/>
+    Reduce delivery delays in North/Northeast by 3 days<br/>
+    → shift ~15,000 orders/year away from bad-review risk<br/>
+    → estimated review score lift of 0.3–0.5 points
+  </div>
+  <p style="font-size:0.75rem; color:#94A3B8; margin-top:1rem">
+    Dataset: Brazilian E-Commerce Public Dataset by Olist (Kaggle) &nbsp;·&nbsp;
+    GitHub: github.com/binhvo9/olist-ecommerce-analysis
+  </p>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    transition: 'slide',
+    controls: true,
+    progress: true,
+  });
+</script>
+</body>
+</html>

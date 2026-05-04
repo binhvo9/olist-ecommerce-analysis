@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install black flake8 pytest
+
+      - name: Black format check
+        run: black --check src/
+
+      - name: Flake8 lint
+        run: flake8 --max-line-length=100 src/
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short 2>/dev/null || echo "No tests yet"

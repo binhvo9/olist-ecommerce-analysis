@@ -57,16 +57,22 @@ def build_master(dfs: dict[str, pd.DataFrame]) -> pd.DataFrame:
         .reset_index()
     )
     # keep first product_id per order for product-level features
-    items_first = items[["order_id", "product_id", "seller_id"]].drop_duplicates("order_id")
+    items_first = items[["order_id", "product_id", "seller_id"]].drop_duplicates(
+        "order_id"
+    )
 
     # translate product categories
     products = products.merge(translation, on="product_category_name", how="left")
 
-    print(f"\nBuilding master dataframe:")
+    print("\nBuilding master dataframe:")
     df = orders.copy()
     print(f"  orders: {len(df)}")
 
-    df = df.merge(customers[["customer_id", "customer_unique_id", "customer_state"]], on="customer_id", how="left")
+    df = df.merge(
+        customers[["customer_id", "customer_unique_id", "customer_state"]],
+        on="customer_id",
+        how="left",
+    )
     print(f"  + customers: {len(df)}")
 
     df = df.merge(pay_agg, on="order_id", how="left")
@@ -79,21 +85,35 @@ def build_master(dfs: dict[str, pd.DataFrame]) -> pd.DataFrame:
     print(f"  + items (first product): {len(df)}")
 
     df = df.merge(
-        products[["product_id", "product_category_name_english", "product_weight_g",
-                  "product_length_cm", "product_height_cm", "product_width_cm"]],
-        on="product_id", how="left"
+        products[
+            [
+                "product_id",
+                "product_category_name_english",
+                "product_weight_g",
+                "product_length_cm",
+                "product_height_cm",
+                "product_width_cm",
+            ]
+        ],
+        on="product_id",
+        how="left",
     )
     print(f"  + products: {len(df)}")
 
-    df = df.merge(
-        sellers[["seller_id", "seller_state"]],
-        on="seller_id", how="left"
-    )
+    df = df.merge(sellers[["seller_id", "seller_state"]], on="seller_id", how="left")
     print(f"  + sellers: {len(df)}")
 
     df = df.merge(
-        reviews[["order_id", "review_score", "review_creation_date", "review_answer_timestamp"]],
-        on="order_id", how="left"
+        reviews[
+            [
+                "order_id",
+                "review_score",
+                "review_creation_date",
+                "review_answer_timestamp",
+            ]
+        ],
+        on="order_id",
+        how="left",
     )
     print(f"  + reviews: {len(df)}")
 

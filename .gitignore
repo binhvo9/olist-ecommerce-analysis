@@ -5,3 +5,7 @@ __pycache__/
 .ipynb_checkpoints/
 outputs/*.png
 outputs/*.html
+reports/figures/*.png
+reports/master.parquet
+reports/rfm_segments.parquet
+reports/review_model.joblib

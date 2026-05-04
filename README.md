@@ -16,12 +16,16 @@
 
 | Metric | Finding |
 |---|---|
-| On-time delivery rate | ~60% of orders arrive before estimated date |
-| Worst-performing region | North/Northeast states average 10+ days late |
-| Customer forgiveness window | Reviews tank sharply after **+7 days** late |
-| RFM segments | 4 clusters — Champions, Loyal, At-Risk, Lost |
-| Review prediction ROC-AUC | **~0.78** (Random Forest vs 0.68 LR baseline) |
-| Top predictor of bad review | `delivery_delay` — by a wide margin (SHAP) |
+| Delivered orders | **97,007** / 99,441 (97%) |
+| On-time delivery rate | **93.2%** arrive before Olist's estimated date |
+| Mean delivery delta | **−11.9 days** (Olist estimates conservatively — most orders arrive early) |
+| Very late orders (>7d past estimate) | **3.0%** — but these account for the majority of 1-star reviews |
+| Worst state — on-time rate | **AL (Alagoas): 78.6%** on-time, mean −8.7 days |
+| Customer forgiveness window | Review scores drop sharply beyond **+7 days** past estimate |
+| RFM segments | 4 clusters — Champions (2.4k), Loyal (2.8k), At-Risk (37.5k), Lost (50.6k) |
+| Review prediction ROC-AUC | **0.760** Random Forest vs **0.747** LR baseline |
+| Top predictor of bad review | `delivery_delay` — dominant SHAP feature by large margin |
+| Bad review rate | **12.7%** of delivered orders score 1–2 stars |
 
 ---
 

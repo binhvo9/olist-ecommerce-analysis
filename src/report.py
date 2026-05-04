@@ -67,12 +67,16 @@ def _kpi_table(kpis: dict) -> Table:
     return t
 
 
-def _fig(path: Path, width: float = 14 * cm) -> Image:
+def _fig(path: Path, width: float = 14 * cm, max_height: float = 18 * cm) -> Image:
     if path.exists():
         img = Image(str(path))
         aspect = img.imageHeight / img.imageWidth
+        h = width * aspect
+        if h > max_height:
+            h = max_height
+            width = h / aspect
         img.drawWidth = width
-        img.drawHeight = width * aspect
+        img.drawHeight = h
         return img
     return Paragraph(f"[Figure not found: {path.name}]", _styles()["Caption"])
 
@@ -205,7 +209,9 @@ def generate(
     if segment_profile is not None:
         seg_data = [["Segment"] + list(segment_profile.columns)]
         for idx, row in segment_profile.iterrows():
-            seg_data.append([str(idx)] + [str(round(v, 1)) for v in row])
+            seg_data.append(
+                [str(idx)] + [str(round(v, 1)) if isinstance(v, (int, float)) else str(v) for v in row]
+            )
         seg_table = Table(seg_data, colWidths=[4 * cm] * len(seg_data[0]))
         seg_table.setStyle(
             TableStyle(
@@ -241,11 +247,11 @@ def generate(
         )
     )
     story.append(Spacer(1, 0.3 * cm))
-    story.append(_fig(figures_dir / "15_shap_summary.png"))
+    story.append(_fig(figures_dir / "15_shap_summary.png", width=11 * cm))
     story.append(
         Paragraph("Figure 6 — SHAP feature importance (Random Forest)", s["Caption"])
     )
-    story.append(Spacer(1, 0.5 * cm))
+    story.append(PageBreak())
 
     story.append(Paragraph("Recommendations", s["H2Report"]))
     recommendations = [

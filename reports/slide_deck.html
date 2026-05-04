@@ -55,11 +55,11 @@
   <h2>The Problem</h2>
   <div class="insight-box" style="font-size:1.1rem; text-align:center; padding:2rem">
     <strong style="font-size:1.5rem; color:var(--brand)">
-      Only ~60% of orders arrive on time.
+      3% of orders arrive 7+ days past their estimated date.
     </strong><br/><br/>
-    In the North and Northeast regions,<br/>
-    average delivery runs <span class="red">10+ days late</span>.<br/><br/>
-    And late delivery is the <strong>#1 predictor of a 1-star review</strong>.
+    Olist's estimates are conservative — 93% arrive early.<br/>
+    But that 3% accounts for the <strong>majority of 1-star reviews</strong>.<br/><br/>
+    And the model can <span class="red">predict it before it happens.</span>
   </div>
 </section>
 
@@ -100,21 +100,22 @@
   <h2>Angle 1 — Delivery Performance</h2>
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-number">~60%</div>
-      <div class="kpi-label">On-time delivery rate</div>
+      <div class="kpi-number green">93.2%</div>
+      <div class="kpi-label">On-time rate (vs estimate)</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-number red">10+ days</div>
-      <div class="kpi-label">Average delay — North/Northeast</div>
+      <div class="kpi-number red">3.0%</div>
+      <div class="kpi-label">Very late (&gt;7d past estimate)</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-number green">−3 days</div>
-      <div class="kpi-label">Average — São Paulo (early)</div>
+      <div class="kpi-number">−11.9d</div>
+      <div class="kpi-label">Mean delta (early = negative)</div>
     </div>
   </div>
   <div class="insight-box" style="margin-top:1rem">
-    <strong>Key finding:</strong> Delivery delay is almost entirely a geography problem.
-    SP sellers shipping to SP customers are early. Everything else degrades with distance.
+    <strong>Surprise finding:</strong> Olist estimates conservatively — most orders arrive
+    ~12 days early. The real problem is the 3% tail: very late orders with
+    <strong>AL at 78.6% on-time</strong> (worst state) vs SP near 97%.
   </div>
 </section>
 
@@ -154,23 +155,23 @@
   <h2>Angle 2 — Customer Segments</h2>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-top:0.5rem">
     <div class="segment-card" style="border-color:#2563EB">
-      <h4>🏆 Champions</h4>
-      <p>High spend · recent · repeat buyers<br/>
+      <h4>🏆 Champions <span style="font-weight:normal;font-size:0.8rem">(2,421)</span></h4>
+      <p>Avg spend R$1,164 · ordered 239 days ago<br/>
       <strong>Action:</strong> Loyalty rewards, early access</p>
     </div>
     <div class="segment-card" style="border-color:#16A34A">
-      <h4>💚 Loyal</h4>
-      <p>Consistent frequency · moderate spend<br/>
+      <h4>💚 Loyal <span style="font-weight:normal;font-size:0.8rem">(2,767)</span></h4>
+      <p>2.1 orders avg · R$308 spend<br/>
       <strong>Action:</strong> Cross-sell, referral programme</p>
     </div>
     <div class="segment-card" style="border-color:#F59E0B">
-      <h4>⚠️ At-Risk</h4>
-      <p>Good history · lapsing recently<br/>
+      <h4>⚠️ At-Risk <span style="font-weight:normal;font-size:0.8rem">(37,526)</span></h4>
+      <p>387 days since last order · R$134 avg<br/>
       <strong>Action:</strong> Win-back campaign, personalised offer</p>
     </div>
     <div class="segment-card" style="border-color:#DC2626">
-      <h4>💔 Lost</h4>
-      <p>Long inactive · low engagement<br/>
+      <h4>💔 Lost <span style="font-weight:normal;font-size:0.8rem">(50,644)</span></h4>
+      <p>128 days · single purchase · never returned<br/>
       <strong>Action:</strong> Low-cost reactivation or accept churn</p>
     </div>
   </div>
@@ -196,8 +197,8 @@
       <h3>Models</h3>
       <table class="deck">
         <tr><th>Model</th><th>ROC-AUC</th></tr>
-        <tr><td>Logistic Regression</td><td>~0.68</td></tr>
-        <tr><td><strong>Random Forest</strong></td><td><strong>~0.78</strong></td></tr>
+        <tr><td>Logistic Regression</td><td>0.747</td></tr>
+        <tr><td><strong>Random Forest</strong></td><td><strong>0.760</strong></td></tr>
       </table>
       <div class="insight-box" style="margin-top:1rem; font-size:0.85rem">
         +10 AUC points over baseline.<br/>
